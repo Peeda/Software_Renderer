@@ -73,14 +73,12 @@ void update() {
     }
 }
 void render() {
-    // drawGrid();
+    drawGrid();
     for (int i = 0; i < cubeSize; i++) {
         vec2 point = projectedPoints[i];
         drawRectangle(point.x + (float)WINDOW_WIDTH/2, point.y + (float)WINDOW_HEIGHT/2, 3, 3, 0xFF0000FF);
     }
     
-    drawRectangle(0,0,500,500, 0xFF00FFFF);
-
     // CPURender();
     textureRender();
 

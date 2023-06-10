@@ -1,6 +1,7 @@
 #include "rendering.h"
 
 u32* colorBuffer = NULL;
+Color* reversedBuffer = NULL;
 Texture bufferTexture;
 int WINDOW_WIDTH = 800;
 int WINDOW_HEIGHT = 600;
@@ -8,12 +9,13 @@ int WINDOW_HEIGHT = 600;
 
 void setupRendering() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "test");
-    SetTargetFPS(60);
+    SetTargetFPS(144);
     ToggleFullscreen();
     WINDOW_WIDTH = GetMonitorWidth(GetCurrentMonitor());
     WINDOW_HEIGHT = GetMonitorHeight(GetCurrentMonitor());
 
     colorBuffer = (u32*)malloc(sizeof(u32) * WINDOW_WIDTH * WINDOW_HEIGHT);
+    reversedBuffer = (Color*)malloc(sizeof(Color) * WINDOW_WIDTH * WINDOW_HEIGHT);
 
     Image tempImage = GenImageColor(WINDOW_WIDTH, WINDOW_HEIGHT, WHITE);
     ImageFormat(&tempImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
@@ -54,6 +56,11 @@ void CPURender() {
     EndDrawing();
 }
 
+
+typedef union {
+    u32 num;
+    Color color;
+} reverse;
 void textureRender() {
     /*
      Quicker rendering of the pixel buffer to the screen using raylib's
@@ -61,8 +68,13 @@ void textureRender() {
      ABGR from the hex values
     */
 
-    resetBuffer(0xFFFF0000);
-    UpdateTexture(bufferTexture, colorBuffer);
+    for (int i = 0; i < WINDOW_WIDTH * WINDOW_HEIGHT; i++) {
+        reverse curr;
+        curr.num = colorBuffer[i];
+        Color reversed = curr.color;
+        reversedBuffer[i] = (Color){reversed.a,reversed.b,reversed.g,reversed.r};
+    }
+    UpdateTexture(bufferTexture, reversedBuffer);
     //draw texture to screen
     BeginDrawing();
         ClearBackground(RAYWHITE);
