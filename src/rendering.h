@@ -4,7 +4,9 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "raylib.h"
+#include <raylib.h>
+
+#include "vectors.h"
 
 typedef uint32_t u32;
 
@@ -17,9 +19,10 @@ extern int WINDOW_HEIGHT;
 void setupRendering();
 void destroyRendering();
 void resetBuffer(u32 color);
-int getIndex(int y, int x);
 void CPURender();
-void TextureRender();
+void textureRender();
+//takes RGBA format for color
+void drawPixel(int x, int y, u32 color);
 void drawGrid();
 void drawRectangle(int xStart, int yStart, int width, int height, u32 color);
 
