@@ -76,6 +76,45 @@ void drawPixel(int x, int y, Color color) {
     }
 }
 
+void drawLine(int x1, int y1, int x2, int y2, Color color) {
+    int deltaX = x2-x1;
+    int deltaY = y2-y1;
+    int length = abs(deltaX) > abs(deltaY) ? deltaX : deltaY;
+    length = abs(length);
+    float xInc = deltaX / (float)length;
+    float yInc = deltaY / (float)length;
+    float x = x1;
+    float y = y1;
+    for (int i = 0; i <= length; i++) {
+        drawPixel(round(x),round(y),color);
+        x += xInc;
+        y += yInc;
+    }
+}
+
+void lineTest() {
+    drawLine(200,200,400,0,BLUE);
+    drawLine(200,200,300,0,BLUE);
+    drawLine(200,200,400,100,BLUE);
+
+    drawLine(200,200,0,0,BLUE);
+    drawLine(200,200,100,0,BLUE);
+    drawLine(200,200,0,100,BLUE);
+
+    drawLine(200,200,400,400,GREEN);
+    drawLine(200,200,400,300,GREEN);
+    drawLine(200,200,300,400,GREEN);
+
+    drawLine(200,200,0,400,GREEN);
+    drawLine(200,200,0,300,GREEN);
+    drawLine(200,200,100,400,GREEN);
+
+    drawLine(200,200,200,400, RED);
+    drawLine(200,200,200,0, RED);
+    drawLine(200,200,0,200, RED);
+    drawLine(200,200,400,200, RED);
+}
+
 void drawGrid() {
     Color white = (Color){51,51,51,255};
     for (int y = 0; y < WINDOW_HEIGHT; y += 10) {
@@ -88,6 +127,12 @@ void drawGrid() {
             drawPixel(x,y,white);
         }
     }
+}
+
+void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color) {
+    drawLine(x1,y1,x2,y2,color);
+    drawLine(x2,y2,x3,y3,color);
+    drawLine(x3,y3,x1,y1,color);
 }
 
 void drawRectangle(int xStart, int yStart, int width, int height, Color color) {

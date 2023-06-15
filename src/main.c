@@ -43,8 +43,8 @@ void process_input() {
 }
 
 void update() {
-    // cubeRotation.x += 0.01;
-    cubeRotation.y += 0.01;
+    cubeRotation.x += 0.01;
+    // cubeRotation.y += 0.01;
     // cubeRotation.z += 0.01;
     for (int faceInd = 0; faceInd < faceNum; faceInd++) {
         //convert a face to a 2d triangle
@@ -71,10 +71,12 @@ void render() {
     resetBuffer(BLACK);
     drawGrid();
     for (int faceInd = 0; faceInd < faceNum; faceInd++) {
+        vec2 pointArr[3];
         for (int i = 0; i < 3; i++) {
             vec2 point = projectedTriangles[faceInd][i];
-            drawRectangle(point.x + (float)WINDOW_WIDTH/2, point.y + (float)WINDOW_HEIGHT/2, 3, 3, RED);
+            pointArr[i] = (vec2){point.x + (float)WINDOW_WIDTH/2, point.y + (float)WINDOW_HEIGHT/2};
         }
+        drawTriangle(pointArr[0].x, pointArr[0].y, pointArr[1].x, pointArr[1].y, pointArr[2].x, pointArr[2].y, PURPLE);
     }
     textureRender();
 }
