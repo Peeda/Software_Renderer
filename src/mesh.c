@@ -12,7 +12,7 @@ vec3 cubeVertices[cubeVerticesNum] = {
     { 1, -1,  1},
 };
 
-face faces[cubeFaceNum] = {
+face cubeFaces[cubeFaceNum] = {
     //front right back left top bottom
     {1,2,4},
     {2,3,4},

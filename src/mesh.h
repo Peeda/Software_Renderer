@@ -9,6 +9,6 @@
 extern vec3 cubeVertices[cubeVerticesNum];
 
 #define cubeFaceNum 12
-extern face faces[cubeFaceNum];
+extern face cubeFaces[cubeFaceNum];
 
 #endif

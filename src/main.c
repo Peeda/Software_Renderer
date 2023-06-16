@@ -52,7 +52,7 @@ void update() {
         //convert a face to a 2d triangle
         vec3 facePoints[3];
         //get the 3d points for the current triangle
-        face currFace = faces[faceInd];
+        face currFace = cubeFaces[faceInd];
         facePoints[0] = cubeVertices[currFace.a];
         facePoints[1] = cubeVertices[currFace.b];
         facePoints[2] = cubeVertices[currFace.c];
