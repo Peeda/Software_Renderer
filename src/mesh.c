@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-vec3 vertices[meshVertices] = {
+vec3 cubeVertices[cubeVerticesNum] = {
     {5,5,5},
     {-1, -1, -1},
     {-1,  1, -1},
@@ -12,7 +12,7 @@ vec3 vertices[meshVertices] = {
     { 1, -1,  1},
 };
 
-face faces[faceNum] = {
+face faces[cubeFaceNum] = {
     //front right back left top bottom
     {1,2,4},
     {2,3,4},

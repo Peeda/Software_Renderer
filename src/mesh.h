@@ -5,10 +5,10 @@
 #include "triangle.h"
 
 //leave an empty index
-#define meshVertices 8 + 1
-extern vec3 vertices[meshVertices];
+#define cubeVerticesNum 8 + 1
+extern vec3 cubeVertices[cubeVerticesNum];
 
-#define faceNum 12
-extern face faces[faceNum];
+#define cubeFaceNum 12
+extern face faces[cubeFaceNum];
 
 #endif
