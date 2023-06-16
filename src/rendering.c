@@ -10,8 +10,10 @@ void setupRendering() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "test");
     SetTargetFPS(60);
     ToggleFullscreen();
-    WINDOW_WIDTH = GetMonitorWidth(GetCurrentMonitor());
-    WINDOW_HEIGHT = GetMonitorHeight(GetCurrentMonitor());
+    if (IsWindowFullscreen()) {
+        WINDOW_WIDTH = GetMonitorWidth(GetCurrentMonitor());
+        WINDOW_HEIGHT = GetMonitorHeight(GetCurrentMonitor());
+    }
 
     colorBuffer = (Color*)malloc(sizeof(Color) * WINDOW_WIDTH * WINDOW_HEIGHT);
 
