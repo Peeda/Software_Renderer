@@ -4,11 +4,18 @@
 #include "vectors.h"
 #include "triangle.h"
 
-//leave an empty index
-#define cubeVerticesNum 8 + 1
+#define cubeVerticesNum 8
 extern vec3 cubeVertices[cubeVerticesNum];
-
 #define cubeFaceNum 12
 extern face cubeFaces[cubeFaceNum];
+
+typedef struct {
+    vec3 *vertices;
+    face *faces;
+    vec3 rotation;
+} mesh;
+
+extern mesh renderedMesh;
+void loadCubeToMesh();
 
 #endif

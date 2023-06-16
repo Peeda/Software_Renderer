@@ -1,7 +1,10 @@
+#include <stdio.h>
 #include "mesh.h"
+#include "array.h"
+
+mesh renderedMesh = {NULL, NULL, {0,0,0}};
 
 vec3 cubeVertices[cubeVerticesNum] = {
-    {5,5,5},
     {-1, -1, -1},
     {-1,  1, -1},
     { 1,  1, -1},
@@ -32,3 +35,12 @@ face cubeFaces[cubeFaceNum] = {
     {5,1,8},
     {1,4,8},
 };
+
+void loadCubeToMesh() {
+    for (int i = 0; i < cubeVerticesNum; i++) {
+        array_push(renderedMesh.vertices, cubeVertices[i]);
+    }
+    for (int i = 0; i < cubeFaceNum; i++) {
+        array_push(renderedMesh.faces, cubeFaces[i]);
+    }
+}

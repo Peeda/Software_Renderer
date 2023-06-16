@@ -9,12 +9,12 @@
 const float FOVFactor = 640;
 
 vec3 cameraPos = {0,0,-5};
-vec3 cubeRotation = {0,0,0};
 
 void setup();
 void render();
 void process_input();
 void update();
+void freeResources();
 
 triangle *projectedTriangles = NULL;
 
@@ -27,9 +27,11 @@ int main() {
         render();
     }
     destroyRendering();
+    freeResources();
     return 0;
 }
 void setup() {
+    loadCubeToMesh();
 }
 
 vec2 project(vec3 point) {
@@ -43,26 +45,27 @@ void process_input() {
 
 void update() {
     array_free(projectedTriangles);
+    // array_free(renderedMesh.faces);
+    // array_free(renderedMesh.vertices);
     projectedTriangles = NULL;
 
-    cubeRotation.x += 0.01;
-    cubeRotation.y += 0.02;
-    // cubeRotation.z += 0.01;
-    for (int faceInd = 0; faceInd < cubeFaceNum; faceInd++) {
+    renderedMesh.rotation.x += 0.01;
+    renderedMesh.rotation.y += 0.01;
+    for (int faceInd = 0; faceInd < array_length(renderedMesh.faces); faceInd++) {
         //convert a face to a 2d triangle
         vec3 facePoints[3];
         //get the 3d points for the current triangle
-        face currFace = cubeFaces[faceInd];
-        facePoints[0] = cubeVertices[currFace.a];
-        facePoints[1] = cubeVertices[currFace.b];
-        facePoints[2] = cubeVertices[currFace.c];
+        face currFace = renderedMesh.faces[faceInd];
+        facePoints[0] = renderedMesh.vertices[currFace.a-1];
+        facePoints[1] = renderedMesh.vertices[currFace.b-1];
+        facePoints[2] = renderedMesh.vertices[currFace.c-1];
         //transform and save to triangle
         triangle toPush;
         for (int i = 0; i < 3; i++) {
             //rotate
-            facePoints[i] = rotateX(facePoints[i], cubeRotation.x);
-            facePoints[i] = rotateY(facePoints[i], cubeRotation.y);
-            facePoints[i] = rotateZ(facePoints[i], cubeRotation.z);
+            facePoints[i] = rotateX(facePoints[i], renderedMesh.rotation.x);
+            facePoints[i] = rotateY(facePoints[i], renderedMesh.rotation.y);
+            facePoints[i] = rotateZ(facePoints[i], renderedMesh.rotation.z);
             //translate w/ camera
             facePoints[i].z -= cameraPos.z;
             //project and add to triangle
@@ -83,4 +86,9 @@ void render() {
         drawTriangle(pointArr[0].x, pointArr[0].y, pointArr[1].x, pointArr[1].y, pointArr[2].x, pointArr[2].y, PURPLE);
     }
     textureRender();
+}
+void freeResources() {
+    free(colorBuffer);
+    array_free(renderedMesh.vertices);
+    array_free(renderedMesh.faces);
 }

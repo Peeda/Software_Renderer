@@ -23,7 +23,6 @@ void setupRendering() {
 }
 
 void destroyRendering() {
-    free(colorBuffer);
     UnloadTexture(bufferTexture);
     CloseWindow();
 }
