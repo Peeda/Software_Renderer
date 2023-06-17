@@ -31,7 +31,7 @@ int main() {
     return 0;
 }
 void setup() {
-    loadCubeToMesh();
+    loadFileToMesh("./assets/f22.obj");
 }
 
 vec2 project(vec3 point) {

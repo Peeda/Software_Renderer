@@ -17,5 +17,6 @@ typedef struct {
 
 extern mesh renderedMesh;
 void loadCubeToMesh();
+void loadFileToMesh(char *path);
 
 #endif
