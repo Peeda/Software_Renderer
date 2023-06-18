@@ -26,6 +26,7 @@ int main() {
         update();
         render();
     }
+
     destroyRendering();
     freeResources();
     return 0;
@@ -91,4 +92,5 @@ void freeResources() {
     free(colorBuffer);
     array_free(renderedMesh.vertices);
     array_free(renderedMesh.faces);
+    array_free(projectedTriangles);
 }
