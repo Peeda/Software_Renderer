@@ -31,7 +31,8 @@ int main() {
     return 0;
 }
 void setup() {
-    loadFileToMesh("./assets/f22.obj");
+    // loadFileToMesh("./assets/f22.obj");
+    loadFileToMesh("./assets/drone.obj");
 }
 
 vec2 project(vec3 point) {
@@ -45,8 +46,6 @@ void process_input() {
 
 void update() {
     array_free(projectedTriangles);
-    // array_free(renderedMesh.faces);
-    // array_free(renderedMesh.vertices);
     projectedTriangles = NULL;
 
     renderedMesh.rotation.x += 0.01;
@@ -77,6 +76,7 @@ void update() {
 void render() {
     resetBuffer(BLACK);
     drawGrid();
+    // lineTest();
     for (int faceInd = 0; faceInd < array_length(projectedTriangles); faceInd++) {
         vec2 pointArr[3];
         for (int i = 0; i < 3; i++) {
