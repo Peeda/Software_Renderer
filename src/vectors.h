@@ -29,7 +29,7 @@ vec3 vec3Scale(vec3 a, float factor);
 vec3 vec3Divide(vec3 a, float factor);
 
 vec3 cross(vec3 a, vec3 b);
-vec3 dot(vec3 a, vec3 b);
+float dot(vec3 a, vec3 b);
 
 vec3 rotateX(vec3 point, float angle);
 vec3 rotateY(vec3 point, float angle);

@@ -42,8 +42,8 @@ vec3 cross(vec3 a, vec3 b) {
         a.x*b.y - a.y*b.x
     };
 }
-vec3 dot(vec3 a, vec3 b) {
-    return (vec3){a.x*b.x, a.y*b.y, a.z*b.z};
+float dot(vec3 a, vec3 b) {
+    return (a.x*b.x + a.y*b.y + a.z*b.z);
 }
 
 void vec2Print(vec2 a) {
