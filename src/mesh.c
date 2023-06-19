@@ -80,10 +80,18 @@ void loadFileToMesh(char *path) {
                 }
             }
             if (buffer[0] == 'v') {
-                vec3 vertex = (vec3){vertexCoordinates[0],vertexCoordinates[1],vertexCoordinates[2]};
+                vec3 vertex = (vec3) {
+                    vertexCoordinates[0],
+                    vertexCoordinates[1],
+                    vertexCoordinates[2],
+                };
                 array_push(renderedMesh.vertices, vertex);
             } else if (buffer[0] == 'f') {
-                face currentFace = (face){vertexIndices[0],vertexIndices[1],vertexIndices[2]};
+                face currentFace = (face) {
+                    vertexIndices[0],
+                    vertexIndices[1],
+                    vertexIndices[2],
+                };
                 array_push(renderedMesh.faces, currentFace);
             }
         }

@@ -8,7 +8,7 @@
 /////////////////////////////////
 const float FOVFactor = 640;
 
-vec3 cameraPos = {0,0,-5};
+vec3 cameraPos = {0,0,0};
 
 void setup();
 void render();
@@ -32,8 +32,8 @@ int main() {
     return 0;
 }
 void setup() {
-    // loadFileToMesh("./assets/f22.obj");
     loadFileToMesh("./assets/drone.obj");
+    // loadFileToMesh("./assets/cube.obj");
 }
 
 vec2 project(vec3 point) {
@@ -66,10 +66,29 @@ void update() {
             facePoints[i] = rotateX(facePoints[i], renderedMesh.rotation.x);
             facePoints[i] = rotateY(facePoints[i], renderedMesh.rotation.y);
             facePoints[i] = rotateZ(facePoints[i], renderedMesh.rotation.z);
-            //translate w/ camera
-            facePoints[i].z -= cameraPos.z;
-            //project and add to triangle
+            //translate away from camera
+            facePoints[i].z += 5;
+        }
+        //backface culling
+        // 0 -> A
+        // 1 -> B
+        // 2 -> C
+        vec3 AB = vec3Subtract(facePoints[1],facePoints[0]);
+        vec3 AC = vec3Subtract(facePoints[2],facePoints[0]);
+        vec3 faceNormal = cross(AB, AC);
+        //ray from a point on the face to the camera
+        vec3 cameraRay = vec3Subtract(cameraPos, facePoints[1]);
+        float dotProduct = dot(faceNormal, cameraRay);
+        if (dotProduct < 0) {
+            //don't render if the face points away from the camera
+            continue;
+        }
+
+        for (int i = 0; i < 3; i++) {
+            //project and scale to screen
             toPush.points[i] = project(facePoints[i]);
+            toPush.points[i].x += (float)WINDOW_WIDTH/2;
+            toPush.points[i].y += (float)WINDOW_HEIGHT/2;
         }
         array_push(projectedTriangles,toPush);
     }
@@ -79,12 +98,10 @@ void render() {
     drawGrid();
     // lineTest();
     for (int faceInd = 0; faceInd < array_length(projectedTriangles); faceInd++) {
-        vec2 pointArr[3];
-        for (int i = 0; i < 3; i++) {
-            vec2 point = projectedTriangles[faceInd].points[i];
-            pointArr[i] = (vec2){point.x + (float)WINDOW_WIDTH/2, point.y + (float)WINDOW_HEIGHT/2};
-        }
-        drawTriangle(pointArr[0].x, pointArr[0].y, pointArr[1].x, pointArr[1].y, pointArr[2].x, pointArr[2].y, PURPLE);
+        triangle tri = projectedTriangles[faceInd];
+        drawTriangle(tri.points[0].x, tri.points[0].y, 
+                     tri.points[1].x, tri.points[1].y, 
+                     tri.points[2].x, tri.points[2].y, PURPLE);
     }
     textureRender();
 }
