@@ -145,6 +145,7 @@ void fillFlatBottom(int x1, int y1, int mx, int my, int x2, int y2, Color color)
     //points 1 and m are the bottom, 2 is the top
     //y2 should be higher up than the other two points
     assert(y2 <= y1 && y2 <= my);
+    assert(y1-y2 != 0 && my-y2 != 0);
     //iterate from the top down, drawing scanlines
     if (mx < x1) {
         intSwap(&mx,&x1);
@@ -170,6 +171,7 @@ void fillFlatTop(int x1, int y1, int mx, int my, int x2, int y2, Color color) {
     //point 2 should be the bottom point
     //point 1 should be on the left and point m on the right
     assert(y2 >= y1 && y2 >= my);
+    assert(y1-y2 != 0 && my-y2 != 0);
     if (x1 > mx) {
         intSwap(&x1,&mx);
         intSwap(&y1,&my);
@@ -193,7 +195,6 @@ void fillFlatTop(int x1, int y1, int mx, int my, int x2, int y2, Color color) {
 void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color) {
     //find mx and my
     //bubble sort the coordinates in ascending y order
-    // printf("%d,%d,%d,%d,%d,%d\n",x1,y1,x2,y2,x3,y3);
     bool swapped;
     do {
         swapped = false;
@@ -208,11 +209,19 @@ void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color) {
             swapped = true;
         }
     } while (swapped);
-    // printf("%d,%d,%d,%d,%d,%d\n",x1,y1,x2,y2,x3,y3);
-    int my = y2;
-    int mx = (float)(x3-x1)*(y2-y1)/(float)(y3-y1)+x1;
-    fillFlatBottom(x2,y2,mx,my,x1,y1,color);
-    fillFlatTop(x2,y2,mx,my,x3,y3,color);
+    if (y3 == y1) {
+        return;
+    }
+    if (y1==y2) {
+        fillFlatTop(x1,y1,x2,y2,x3,y3,color);
+    } else if (y2==y3) {
+        fillFlatBottom(x2,y2,x3,y3,x1,y1,color);
+    } else {
+        int my = y2;
+        int mx = (float)(x3-x1)*(y2-y1)/(float)(y3-y1)+x1;
+        fillFlatBottom(x2,y2,mx,my,x1,y1,color);
+        fillFlatTop(x2,y2,mx,my,x3,y3,color);
+    }
 }
 
 void drawRectangle(int xStart, int yStart, int width, int height, Color color) {

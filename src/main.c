@@ -32,8 +32,8 @@ int main() {
     return 0;
 }
 void setup() {
-    // loadFileToMesh("./assets/drone.obj");
-    loadFileToMesh("./assets/cube.obj");
+    loadFileToMesh("./assets/drone.obj");
+    // loadFileToMesh("./assets/cube.obj");
 }
 
 vec2 project(vec3 point) {
@@ -101,10 +101,10 @@ void render() {
         triangle tri = projectedTriangles[faceInd];
         fillTriangle(tri.points[0].x, tri.points[0].y, 
                      tri.points[1].x, tri.points[1].y, 
-                     tri.points[2].x, tri.points[2].y, PURPLE);
+                     tri.points[2].x, tri.points[2].y, WHITE);
         drawTriangle(tri.points[0].x, tri.points[0].y, 
                      tri.points[1].x, tri.points[1].y, 
-                     tri.points[2].x, tri.points[2].y, RED);
+                     tri.points[2].x, tri.points[2].y, BLACK);
     }
     textureRender();
 }
