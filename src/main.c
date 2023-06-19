@@ -76,6 +76,7 @@ void update() {
         vec3 AB = vec3Subtract(facePoints[1],facePoints[0]);
         vec3 AC = vec3Subtract(facePoints[2],facePoints[0]);
         vec3 faceNormal = cross(AB, AC);
+        vec3Normalize(&faceNormal);
         //ray from a point on the face to the camera
         vec3 cameraRay = vec3Subtract(cameraPos, facePoints[1]);
         float dotProduct = dot(faceNormal, cameraRay);

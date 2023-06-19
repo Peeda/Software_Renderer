@@ -12,11 +12,17 @@ vec2 vec2Add(vec2 a, vec2 b) {
 vec2 vec2Subtract(vec2 a, vec2 b) {
     return (vec2){a.x - b.x, a.y - b.y};
 }
-vec2 vec2Scale(vec2 a, float factor) {
-    return (vec2){a.x*factor, a.y*factor};
+void vec2Scale(vec2 *a, float factor) {
+    a->x *= factor;
+    a->y *= factor;
 }
-vec2 vec2Divide(vec2 a, float factor) {
-    return (vec2){a.x/factor, a.y/factor};
+void vec2Divide(vec2 *a, float factor) {
+    a->x /= factor;
+    a->y /= factor;
+}
+void vec2Normalize(vec2 *a) {
+    float magnitude = vec2Magnitude(*a);
+    vec2Divide(a, magnitude);
 }
 
 float vec3Magnitude(vec3 a) {
@@ -28,11 +34,19 @@ vec3 vec3Add(vec3 a, vec3 b) {
 vec3 vec3Subtract(vec3 a, vec3 b) {
     return (vec3){a.x - b.x, a.y - b.y, a.z - b.z};
 }
-vec3 vec3Scale(vec3 a, float factor) {
-    return (vec3){a.x*factor, a.y*factor, a.z*factor};
+void vec3Scale(vec3 *a, float factor) {
+    a->x *= factor;
+    a->y *= factor;
+    a->z *= factor;
 }
-vec3 vec3Divide(vec3 a, float factor) {
-    return (vec3){a.x/factor, a.y/factor, a.z/factor};
+void vec3Divide(vec3 *a, float factor) {
+    a->x /= factor;
+    a->y /= factor;
+    a->z /= factor;
+}
+void vec3Normalize(vec3 *a) {
+    float magnitude = vec3Magnitude(*a);
+    vec3Divide(a, magnitude);
 }
 
 vec3 cross(vec3 a, vec3 b) {

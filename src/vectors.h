@@ -19,14 +19,16 @@ void vec3Print(vec3 a);
 float vec2Magnitude(vec2 a);
 vec2 vec2Add(vec2 a, vec2 b);
 vec2 vec2Subtract(vec2 a, vec2 b);
-vec2 vec2Scale(vec2 a, float factor);
-vec2 vec2Divide(vec2 a, float factor);
+void vec2Scale(vec2 *a, float factor);
+void vec2Divide(vec2 *a, float factor);
+void vec2Normalize(vec2 *a);
 
 float vec3Magnitude(vec3 a);
 vec3 vec3Add(vec3 a, vec3 b);
 vec3 vec3Subtract(vec3 a, vec3 b);
-vec3 vec3Scale(vec3 a, float factor);
-vec3 vec3Divide(vec3 a, float factor);
+void vec3Scale(vec3 *a, float factor);
+void vec3Divide(vec3 *a, float factor);
+void vec3Normalize(vec3 *a);
 
 vec3 cross(vec3 a, vec3 b);
 float dot(vec3 a, vec3 b);
