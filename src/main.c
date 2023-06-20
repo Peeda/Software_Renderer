@@ -6,6 +6,7 @@ const float FOVFactor = 640;
 vec3 cameraPos = {0,0,0};
 
 bool useCulling;
+bool painters;
 enum renderMethod {
     WIREFRAME,
     WIREFRAME_DOTS,
@@ -36,6 +37,7 @@ int main() {
 }
 void setup() {
     useCulling = true;
+    painters = true;
     renderMethod = WIREFRAME;
     // loadFileToMesh("./assets/drone.obj");
     // loadFileToMesh("./assets/cube.obj");
@@ -51,6 +53,9 @@ void process_input() {
     if (IsKeyPressed(KEY_C)) {
         useCulling = !useCulling;
     }
+    if (IsKeyPressed(KEY_P)) {
+        painters = !painters;
+    }
     if (IsKeyPressed(KEY_ONE)) {
         renderMethod = WIREFRAME;
     }
@@ -64,7 +69,6 @@ void process_input() {
         renderMethod = FILL_WIREFRAME;
     }
 }
-
 void update() {
     array_free(projectedTriangles);
     projectedTriangles = NULL;
@@ -79,9 +83,7 @@ void update() {
         facePoints[0] = renderedMesh.vertices[currFace.a-1];
         facePoints[1] = renderedMesh.vertices[currFace.b-1];
         facePoints[2] = renderedMesh.vertices[currFace.c-1];
-        //transform and save to triangle
-        triangle toPush;
-        toPush.color = currFace.color;
+        //transform the points
         for (int i = 0; i < 3; i++) {
             //rotate
             facePoints[i] = rotateX(facePoints[i], renderedMesh.rotation.x);
@@ -106,7 +108,14 @@ void update() {
                 continue;
             }
         }
-
+        triangle toPush;
+        toPush.color = currFace.color;
+        float avgDepth = 0;
+        for (int i = 0; i < 3; i++) {
+            avgDepth += facePoints[i].z;
+        }
+        avgDepth /= 3;
+        toPush.depth = avgDepth;
         for (int i = 0; i < 3; i++) {
             //project and scale to screen
             toPush.points[i] = project(facePoints[i]);
@@ -114,6 +123,17 @@ void update() {
             toPush.points[i].y += (float)WINDOW_HEIGHT/2;
         }
         array_push(projectedTriangles,toPush);
+    }
+    if (painters) {
+        for (int i = 1; i < array_length(projectedTriangles); i++) {
+            int k = i;
+            while (k>0 && projectedTriangles[k].depth > projectedTriangles[k-1].depth) {
+                triangle tmp = projectedTriangles[k-1];
+                projectedTriangles[k-1] = projectedTriangles[k];
+                projectedTriangles[k] = tmp;
+                k--;
+            }
+        }
     }
 }
 void render() {

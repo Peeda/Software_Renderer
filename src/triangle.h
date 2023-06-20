@@ -15,6 +15,7 @@ typedef struct {
 typedef struct {
     vec2 points[3];
     Color color;
+    float depth;
 } triangle;
 
 #endif
