@@ -38,7 +38,8 @@ void setup() {
     useCulling = true;
     renderMethod = WIREFRAME;
     // loadFileToMesh("./assets/drone.obj");
-    loadFileToMesh("./assets/cube.obj");
+    // loadFileToMesh("./assets/cube.obj");
+    loadCubeToMesh();
 }
 
 vec2 project(vec3 point) {
@@ -70,16 +71,17 @@ void update() {
 
     renderedMesh.rotation.x += 0.01;
     renderedMesh.rotation.y += 0.01;
+    //loop through each face and project it to a triangle
     for (int faceInd = 0; faceInd < array_length(renderedMesh.faces); faceInd++) {
-        //convert a face to a 2d triangle
         vec3 facePoints[3];
-        //get the 3d points for the current triangle
+        //get the 3d points for the current face
         face currFace = renderedMesh.faces[faceInd];
         facePoints[0] = renderedMesh.vertices[currFace.a-1];
         facePoints[1] = renderedMesh.vertices[currFace.b-1];
         facePoints[2] = renderedMesh.vertices[currFace.c-1];
         //transform and save to triangle
         triangle toPush;
+        toPush.color = currFace.color;
         for (int i = 0; i < 3; i++) {
             //rotate
             facePoints[i] = rotateX(facePoints[i], renderedMesh.rotation.x);
@@ -122,22 +124,22 @@ void render() {
         if (renderMethod == WIREFRAME) {
             drawTriangle(tri.points[0].x, tri.points[0].y, 
                          tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, PURPLE);
+                         tri.points[2].x, tri.points[2].y, RED);
         } else if (renderMethod == WIREFRAME_DOTS){
             drawTriangle(tri.points[0].x, tri.points[0].y, 
                          tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, PURPLE);
+                         tri.points[2].x, tri.points[2].y, RED);
             for (int i = 0; i < 3; i++) {
-                drawRectangle(tri.points[i].x-5,tri.points[i].y-5,10,10,RED);
+                drawRectangle(tri.points[i].x-5,tri.points[i].y-5,10,10,WHITE);
             }
         } else if (renderMethod == FILL) {
             fillTriangle(tri.points[0].x, tri.points[0].y, 
                          tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, WHITE);
+                         tri.points[2].x, tri.points[2].y, tri.color);
         } else if (renderMethod == FILL_WIREFRAME) {
             fillTriangle(tri.points[0].x, tri.points[0].y, 
                          tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, WHITE);
+                         tri.points[2].x, tri.points[2].y, tri.color);
             drawTriangle(tri.points[0].x, tri.points[0].y, 
                          tri.points[1].x, tri.points[1].y, 
                          tri.points[2].x, tri.points[2].y, BLACK);
