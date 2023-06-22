@@ -13,6 +13,8 @@ typedef struct {
     vec3 *vertices;
     face *faces;
     vec3 rotation;
+    vec3 scale;
+    vec3 translation;
 } mesh;
 
 extern mesh renderedMesh;

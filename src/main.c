@@ -1,6 +1,7 @@
 #include "rendering.h"
 #include "mesh.h"
 #include "array.h"
+#include "matrix.h"
 
 const float FOVFactor = 640;
 vec3 cameraPos = {0,0,0};
@@ -40,8 +41,8 @@ void setup() {
     painters = true;
     renderMethod = WIREFRAME;
     // loadFileToMesh("./assets/cube.obj");
-    loadFileToMesh("./assets/drone.obj");
-    // loadCubeToMesh();
+    // loadFileToMesh("./assets/drone.obj");
+    loadCubeToMesh();
 }
 
 vec2 project(vec3 point) {
@@ -75,20 +76,33 @@ void update() {
 
     renderedMesh.rotation.x += 0.01;
     renderedMesh.rotation.y += 0.01;
+    renderedMesh.rotation.z += 0.01;
+
+    renderedMesh.scale.x += 0.002;
+    renderedMesh.scale.y += 0.002;
+    renderedMesh.scale.z += 0.002;
+    mat4 scaleMatrix = mat4Scaling(
+        renderedMesh.scale.x,
+        renderedMesh.scale.y,
+        renderedMesh.scale.z
+    );
     //loop through each face and project it to a triangle
     for (int faceInd = 0; faceInd < array_length(renderedMesh.faces); faceInd++) {
-        vec3 facePoints[3];
+        vec4 facePoints[3];
         //get the 3d points for the current face
         face currFace = renderedMesh.faces[faceInd];
-        facePoints[0] = renderedMesh.vertices[currFace.a-1];
-        facePoints[1] = renderedMesh.vertices[currFace.b-1];
-        facePoints[2] = renderedMesh.vertices[currFace.c-1];
+        facePoints[0] = makeVec4(renderedMesh.vertices[currFace.a-1]);
+        facePoints[1] = makeVec4(renderedMesh.vertices[currFace.b-1]);
+        facePoints[2] = makeVec4(renderedMesh.vertices[currFace.c-1]);
         //transform the points
         for (int i = 0; i < 3; i++) {
+            facePoints[i] = mat4MultiplyVec4(scaleMatrix,facePoints[i]);
             //rotate
+            /*
             facePoints[i] = rotateX(facePoints[i], renderedMesh.rotation.x);
             facePoints[i] = rotateY(facePoints[i], renderedMesh.rotation.y);
             facePoints[i] = rotateZ(facePoints[i], renderedMesh.rotation.z);
+            */
             //translate away from camera
             facePoints[i].z += 5;
         }
@@ -96,12 +110,15 @@ void update() {
             // 0 -> A
             // 1 -> B
             // 2 -> C
-            vec3 AB = vec3Subtract(facePoints[1],facePoints[0]);
-            vec3 AC = vec3Subtract(facePoints[2],facePoints[0]);
+            vec3 A = makeVec3(facePoints[0]);
+            vec3 B = makeVec3(facePoints[1]);
+            vec3 C = makeVec3(facePoints[2]);
+            vec3 AB = vec3Subtract(B,A);
+            vec3 AC = vec3Subtract(C,A);
             vec3 faceNormal = cross(AB, AC);
             vec3Normalize(&faceNormal);
             //ray from a point on the face to the camera
-            vec3 cameraRay = vec3Subtract(cameraPos, facePoints[1]);
+            vec3 cameraRay = vec3Subtract(cameraPos, B);
             float dotProduct = dot(faceNormal, cameraRay);
             if (dotProduct < 0) {
                 //don't render if the face points away from the camera
@@ -118,7 +135,7 @@ void update() {
         toPush.depth = avgDepth;
         for (int i = 0; i < 3; i++) {
             //project and scale to screen
-            toPush.points[i] = project(facePoints[i]);
+            toPush.points[i] = project(makeVec3(facePoints[i]));
             toPush.points[i].x += (float)WINDOW_WIDTH/2;
             toPush.points[i].y += (float)WINDOW_HEIGHT/2;
         }

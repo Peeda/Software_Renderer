@@ -5,7 +5,7 @@
 #include "mesh.h"
 #include "array.h"
 
-mesh renderedMesh = {NULL, NULL, {0,0,0}};
+mesh renderedMesh = {NULL, NULL, {0,0,0},{1,1,1},{0,0,0}};
 
 vec3 cubeVertices[cubeVerticesNum] = {
     {-1, -1, -1},

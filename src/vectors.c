@@ -88,3 +88,19 @@ vec3 rotateZ(vec3 point, float angle) {
         point.z
     };
 }
+
+vec3 makeVec3(vec4 a) {
+    return (vec3) {
+        a.x,
+        a.y,
+        a.z
+    };
+}
+vec4 makeVec4(vec3 a) {
+    return (vec4) {
+        a.x,
+        a.y,
+        a.z,
+        1
+    };
+}

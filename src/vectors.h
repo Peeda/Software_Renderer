@@ -13,6 +13,13 @@ typedef struct {
     float z;
 } vec3;
 
+typedef struct {
+    float x;
+    float y;
+    float z;
+    float w;
+} vec4;
+
 void vec2Print(vec2 a);
 void vec3Print(vec3 a);
 
@@ -36,5 +43,8 @@ float dot(vec3 a, vec3 b);
 vec3 rotateX(vec3 point, float angle);
 vec3 rotateY(vec3 point, float angle);
 vec3 rotateZ(vec3 point, float angle);
+
+vec3 makeVec3(vec4 a);
+vec4 makeVec4(vec3 a);
 
 #endif
