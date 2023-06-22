@@ -39,9 +39,9 @@ void setup() {
     useCulling = true;
     painters = true;
     renderMethod = WIREFRAME;
-    // loadFileToMesh("./assets/drone.obj");
     // loadFileToMesh("./assets/cube.obj");
-    loadCubeToMesh();
+    loadFileToMesh("./assets/drone.obj");
+    // loadCubeToMesh();
 }
 
 vec2 project(vec3 point) {
