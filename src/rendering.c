@@ -73,8 +73,6 @@ void textureRender() {
 void drawPixel(int x, int y, Color color) {
     if (x < WINDOW_WIDTH && y < WINDOW_HEIGHT && x >= 0 && y >= 0) {
         colorBuffer[y*WINDOW_WIDTH + x] = color;
-    } else {
-        printf("drawPixel out of bounds, x is %d and y is %d\n", x, y);
     }
 }
 

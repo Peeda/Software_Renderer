@@ -38,7 +38,7 @@ int main() {
 }
 void setup() {
     useCulling = true;
-    painters = true;
+    painters = false;
     renderMethod = WIREFRAME;
     // loadFileToMesh("./assets/cube.obj");
     // loadFileToMesh("./assets/drone.obj");
@@ -78,14 +78,34 @@ void update() {
     renderedMesh.rotation.y += 0.01;
     renderedMesh.rotation.z += 0.01;
 
-    renderedMesh.scale.x += 0.002;
-    renderedMesh.scale.y += 0.002;
-    renderedMesh.scale.z += 0.002;
+    renderedMesh.scale.x += 0.001;
+    renderedMesh.scale.y += 0.001;
+    renderedMesh.scale.z += 0.001;
+
+    // renderedMesh.translation.x += 0.01;
+    renderedMesh.translation.z = 5;
     mat4 scaleMatrix = mat4Scaling(
         renderedMesh.scale.x,
         renderedMesh.scale.y,
         renderedMesh.scale.z
     );
+    mat4 translationMatrix = mat4Translation(
+        renderedMesh.translation.x,
+        renderedMesh.translation.y,
+        renderedMesh.translation.z
+    );
+    mat4 rotationMatrices[3];
+    rotationMatrices[0] = mat4XRotation(renderedMesh.rotation.x);
+    rotationMatrices[1] = mat4YRotation(renderedMesh.rotation.y);
+    rotationMatrices[2] = mat4ZRotation(renderedMesh.rotation.z);
+
+    mat4 worldMatrix = mat4Identity();
+    worldMatrix = mat4MultiplyMat4(scaleMatrix,worldMatrix);
+    for (int i = 0; i < 3; i++) {
+        worldMatrix = mat4MultiplyMat4(rotationMatrices[i],worldMatrix);
+    }
+    worldMatrix = mat4MultiplyMat4(translationMatrix,worldMatrix);
+
     //loop through each face and project it to a triangle
     for (int faceInd = 0; faceInd < array_length(renderedMesh.faces); faceInd++) {
         vec4 facePoints[3];
@@ -96,15 +116,7 @@ void update() {
         facePoints[2] = makeVec4(renderedMesh.vertices[currFace.c-1]);
         //transform the points
         for (int i = 0; i < 3; i++) {
-            facePoints[i] = mat4MultiplyVec4(scaleMatrix,facePoints[i]);
-            //rotate
-            /*
-            facePoints[i] = rotateX(facePoints[i], renderedMesh.rotation.x);
-            facePoints[i] = rotateY(facePoints[i], renderedMesh.rotation.y);
-            facePoints[i] = rotateZ(facePoints[i], renderedMesh.rotation.z);
-            */
-            //translate away from camera
-            facePoints[i].z += 5;
+            facePoints[i] = mat4MultiplyVec4(worldMatrix, facePoints[i]);
         }
         if (useCulling) {
             // 0 -> A
