@@ -3,7 +3,7 @@
 #include "array.h"
 #include "matrix.h"
 
-const float FOVFactor = 640;
+mat4 projectionMatrix;
 vec3 cameraPos = {0,0,0};
 
 bool useCulling;
@@ -40,14 +40,12 @@ void setup() {
     useCulling = true;
     painters = false;
     renderMethod = WIREFRAME;
-    // loadFileToMesh("./assets/cube.obj");
-    // loadFileToMesh("./assets/drone.obj");
-    loadCubeToMesh();
-}
 
-vec2 project(vec3 point) {
-    vec2 out = {FOVFactor * point.x / point.z, FOVFactor * point.y / point.z};
-    return out;
+    float aspectRatio = (float)WINDOW_WIDTH/WINDOW_HEIGHT;
+    projectionMatrix = mat4Projection(PI/3,aspectRatio,0.1,100);
+    // loadFileToMesh("./assets/cube.obj");
+    loadFileToMesh("./assets/drone.obj");
+    // loadCubeToMesh();
 }
 
 void process_input() {
@@ -78,9 +76,9 @@ void update() {
     renderedMesh.rotation.y += 0.01;
     renderedMesh.rotation.z += 0.01;
 
-    renderedMesh.scale.x += 0.001;
-    renderedMesh.scale.y += 0.001;
-    renderedMesh.scale.z += 0.001;
+    // renderedMesh.scale.x += 0.001;
+    // renderedMesh.scale.y += 0.001;
+    // renderedMesh.scale.z += 0.001;
 
     // renderedMesh.translation.x += 0.01;
     renderedMesh.translation.z = 5;
@@ -137,20 +135,28 @@ void update() {
                 continue;
             }
         }
-        triangle toPush;
-        toPush.color = currFace.color;
         float avgDepth = 0;
         for (int i = 0; i < 3; i++) {
             avgDepth += facePoints[i].z;
         }
-        avgDepth /= 3;
-        toPush.depth = avgDepth;
+        vec4 projectedPoints[3];
         for (int i = 0; i < 3; i++) {
             //project and scale to screen
-            toPush.points[i] = project(makeVec3(facePoints[i]));
-            toPush.points[i].x += (float)WINDOW_WIDTH/2;
-            toPush.points[i].y += (float)WINDOW_HEIGHT/2;
+            projectedPoints[i] = applyProjectionMatrix(projectionMatrix, facePoints[i]);
+
+            projectedPoints[i].x *= (float)WINDOW_WIDTH/2;
+            projectedPoints[i].y *= (float)WINDOW_HEIGHT/2;
+
+            projectedPoints[i].x += (float)WINDOW_WIDTH/2;
+            projectedPoints[i].y += (float)WINDOW_HEIGHT/2;
         }
+        triangle toPush;
+        for (int i = 0; i < 3; i++) {
+            toPush.points[i].x = projectedPoints[i].x;
+            toPush.points[i].y = projectedPoints[i].y;
+        }
+        toPush.color = currFace.color;
+        toPush.depth = avgDepth;
         array_push(projectedTriangles,toPush);
     }
     if (painters) {

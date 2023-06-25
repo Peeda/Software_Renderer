@@ -72,6 +72,24 @@ mat4 mat4MultiplyMat4(mat4 a, mat4 b) {
     }
     return outputMat;
 }
+mat4 mat4Projection(float fov, float aspect, float zNear, float zFar) {
+    mat4 outputMat = {{{0}}};
+    outputMat.m[0][0] = 1/(aspect * tan(fov/2));
+    outputMat.m[1][1] = 1/tan(fov/2);
+    outputMat.m[2][2] = zFar / (zFar-zNear);
+    outputMat.m[2][3] = (-zFar * zNear) / (zFar - zNear);
+    outputMat.m[3][2] = 1;
+    return outputMat;
+}
+vec4 applyProjectionMatrix(mat4 projection, vec4 vec) {
+    vec4 output = mat4MultiplyVec4(projection, vec);
+    if (output.w != 0) {
+        output.x /= output.w;
+        output.y /= output.w;
+        output.z /= output.w;
+    }
+    return output;
+}
 void mat4Print(mat4 a) {
     for (int i = 0; i < 4; i++) {
         for (int k = 0; k < 4; k++) {
