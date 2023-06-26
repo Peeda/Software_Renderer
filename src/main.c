@@ -2,8 +2,10 @@
 #include "mesh.h"
 #include "array.h"
 #include "matrix.h"
+#include "light.h"
 
 mat4 projectionMatrix;
+light worldLight;
 vec3 cameraPos = {0,0,0};
 
 bool useCulling;
@@ -42,7 +44,11 @@ void setup() {
     renderMethod = WIREFRAME;
 
     float aspectRatio = (float)WINDOW_WIDTH/WINDOW_HEIGHT;
+    vec3 lightDir = {0,1,1};
+    vec3Normalize(&lightDir);
+    worldLight = (light){lightDir};
     projectionMatrix = mat4Projection(PI/3,aspectRatio,0.1,100);
+    // loadFileToMesh("./assets/f22.obj");
     // loadFileToMesh("./assets/cube.obj");
     loadFileToMesh("./assets/drone.obj");
     // loadCubeToMesh();
@@ -117,25 +123,32 @@ void update() {
         for (int i = 0; i < 3; i++) {
             facePoints[i] = mat4MultiplyVec4(worldMatrix, facePoints[i]);
         }
-        if (useCulling) {
-            // 0 -> A
-            // 1 -> B
-            // 2 -> C
-            vec3 A = makeVec3(facePoints[0]);
-            vec3 B = makeVec3(facePoints[1]);
-            vec3 C = makeVec3(facePoints[2]);
-            vec3 AB = vec3Subtract(B,A);
-            vec3 AC = vec3Subtract(C,A);
-            vec3 faceNormal = cross(AB, AC);
-            vec3Normalize(&faceNormal);
-            //ray from a point on the face to the camera
-            vec3 cameraRay = vec3Subtract(cameraPos, B);
-            float dotProduct = dot(faceNormal, cameraRay);
-            if (dotProduct < 0) {
-                //don't render if the face points away from the camera
-                continue;
-            }
+        // 0 -> A
+        // 1 -> B
+        // 2 -> C
+        vec3 A = makeVec3(facePoints[0]);
+        vec3 B = makeVec3(facePoints[1]);
+        vec3 C = makeVec3(facePoints[2]);
+        vec3 AB = vec3Subtract(B,A);
+        vec3 AC = vec3Subtract(C,A);
+        vec3 faceNormal = cross(AB, AC);
+        vec3Normalize(&faceNormal);
+        //ray from a point on the face to the camera
+        vec3 cameraRay = vec3Subtract(cameraPos, B);
+        float dotProduct = dot(faceNormal, cameraRay);
+        if (dotProduct < 0 && useCulling) {
+            //don't render if the face points away from the camera
+            continue;
         }
+
+        //calculate lighting with the inverse of the light ray
+        float lightDotProduct = -dot(faceNormal, worldLight.dir);
+        // -1 -> 0
+        // 1 -> 1
+        lightDotProduct++;
+        lightDotProduct /= 2;
+        Color shadedColor = applyLightIntensity(currFace.color, lightDotProduct);
+
         float avgDepth = 0;
         for (int i = 0; i < 3; i++) {
             avgDepth += facePoints[i].z;
@@ -145,9 +158,10 @@ void update() {
             //project and scale to screen
             projectedPoints[i] = perspectiveDivide(facePoints[i]);
 
+            projectedPoints[i].y *= -1;
+
             projectedPoints[i].x *= (float)WINDOW_WIDTH/2;
             projectedPoints[i].y *= (float)WINDOW_HEIGHT/2;
-
             projectedPoints[i].x += (float)WINDOW_WIDTH/2;
             projectedPoints[i].y += (float)WINDOW_HEIGHT/2;
         }
@@ -156,7 +170,7 @@ void update() {
             toPush.points[i].x = projectedPoints[i].x;
             toPush.points[i].y = projectedPoints[i].y;
         }
-        toPush.color = currFace.color;
+        toPush.color = shadedColor;
         toPush.depth = avgDepth;
         array_push(projectedTriangles,toPush);
     }

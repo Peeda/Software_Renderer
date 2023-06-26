@@ -91,6 +91,7 @@ void loadFileToMesh(char *path) {
                     vertexIndices[0],
                     vertexIndices[1],
                     vertexIndices[2],
+                    RED
                 };
                 array_push(renderedMesh.faces, currentFace);
             }
