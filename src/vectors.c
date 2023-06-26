@@ -104,3 +104,12 @@ vec4 makeVec4(vec3 a) {
         1
     };
 }
+
+vec4 perspectiveDivide(vec4 a) {
+    if (a.w != 0) {
+        a.x /= a.w;
+        a.y /= a.w;
+        a.z /= a.w;
+    }
+    return a;
+}

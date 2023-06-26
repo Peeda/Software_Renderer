@@ -47,4 +47,6 @@ vec3 rotateZ(vec3 point, float angle);
 vec3 makeVec3(vec4 a);
 vec4 makeVec4(vec3 a);
 
+vec4 perspectiveDivide(vec4 a);
+
 #endif

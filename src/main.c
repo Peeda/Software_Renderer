@@ -103,6 +103,7 @@ void update() {
         worldMatrix = mat4MultiplyMat4(rotationMatrices[i],worldMatrix);
     }
     worldMatrix = mat4MultiplyMat4(translationMatrix,worldMatrix);
+    worldMatrix = mat4MultiplyMat4(projectionMatrix, worldMatrix);
 
     //loop through each face and project it to a triangle
     for (int faceInd = 0; faceInd < array_length(renderedMesh.faces); faceInd++) {
@@ -142,7 +143,7 @@ void update() {
         vec4 projectedPoints[3];
         for (int i = 0; i < 3; i++) {
             //project and scale to screen
-            projectedPoints[i] = applyProjectionMatrix(projectionMatrix, facePoints[i]);
+            projectedPoints[i] = perspectiveDivide(facePoints[i]);
 
             projectedPoints[i].x *= (float)WINDOW_WIDTH/2;
             projectedPoints[i].y *= (float)WINDOW_HEIGHT/2;
