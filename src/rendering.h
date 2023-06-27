@@ -8,6 +8,7 @@
 #include <math.h>
 
 #include "vectors.h"
+#include "triangle.h"
 
 //RGBA
 extern Color *colorBuffer;
@@ -25,8 +26,8 @@ void drawPixel(int x, int y, Color color);
 void drawLine(int x1, int y1, int x2, int y2, Color color);
 void lineTest();
 void drawGrid();
-void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color);
-void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color);
+void drawTriangle(triangle tri, Color color);
+void fillTriangle(triangle tri, Color color);
 void drawRectangle(int xStart, int yStart, int width, int height, Color color);
 
 #endif

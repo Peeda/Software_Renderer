@@ -14,7 +14,9 @@ enum renderMethod {
     WIREFRAME,
     WIREFRAME_DOTS,
     FILL,
-    FILL_WIREFRAME
+    FILL_WIREFRAME,
+    TEXTURED,
+    TEXTURED_WIREFRAME
 } renderMethod;
 
 void setup();
@@ -72,6 +74,12 @@ void process_input() {
     }
     if (IsKeyPressed(KEY_FOUR)) {
         renderMethod = FILL_WIREFRAME;
+    }
+    if (IsKeyPressed(KEY_FIVE)) {
+        renderMethod = TEXTURED;
+    }
+    if (IsKeyPressed(KEY_SIX)) {
+        renderMethod = TEXTURED_WIREFRAME;
     }
 }
 void update() {
@@ -191,28 +199,20 @@ void render() {
     drawGrid();
     for (int faceInd = 0; faceInd < array_length(projectedTriangles); faceInd++) {
         triangle tri = projectedTriangles[faceInd];
-        if (renderMethod == WIREFRAME) {
-            drawTriangle(tri.points[0].x, tri.points[0].y, 
-                         tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, RED);
-        } else if (renderMethod == WIREFRAME_DOTS){
-            drawTriangle(tri.points[0].x, tri.points[0].y, 
-                         tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, RED);
-            for (int i = 0; i < 3; i++) {
-                drawRectangle(tri.points[i].x-5,tri.points[i].y-5,10,10,WHITE);
+        if (renderMethod == WIREFRAME || renderMethod == WIREFRAME_DOTS) {
+            drawTriangle(tri, RED);
+            if (renderMethod == WIREFRAME_DOTS) {
+                for (int i = 0; i < 3; i++) {
+                    drawRectangle(tri.points[i].x-2,tri.points[i].y-2,4,4,WHITE);
+                }
             }
-        } else if (renderMethod == FILL) {
-            fillTriangle(tri.points[0].x, tri.points[0].y, 
-                         tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, tri.color);
-        } else if (renderMethod == FILL_WIREFRAME) {
-            fillTriangle(tri.points[0].x, tri.points[0].y, 
-                         tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, tri.color);
-            drawTriangle(tri.points[0].x, tri.points[0].y, 
-                         tri.points[1].x, tri.points[1].y, 
-                         tri.points[2].x, tri.points[2].y, BLACK);
+        } else if (renderMethod == FILL || renderMethod == FILL_WIREFRAME) {
+            fillTriangle(tri, tri.color);
+            if (renderMethod == FILL_WIREFRAME) {
+                drawTriangle(tri, BLACK);
+            }
+        } else if (renderMethod == TEXTURED || renderMethod == TEXTURED_WIREFRAME) {
+
         }
     }
     textureRender();

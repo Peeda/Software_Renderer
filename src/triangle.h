@@ -10,10 +10,14 @@ typedef struct {
     int b;
     int c;
     Color color;
+    vec2 aTexture;
+    vec2 bTexture;
+    vec2 cTexture;
 } face;
 
 typedef struct {
     vec2 points[3];
+    vec2 texturePoints[3];
     Color color;
     float depth;
 } triangle;

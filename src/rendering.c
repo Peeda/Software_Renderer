@@ -129,7 +129,13 @@ void drawGrid() {
     }
 }
 
-void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color) {
+void drawTriangle(triangle tri, Color color) {
+    int x1 = tri.points[0].x;
+    int y1 = tri.points[0].y;
+    int x2 = tri.points[1].x;
+    int y2 = tri.points[1].y;
+    int x3 = tri.points[2].x;
+    int y3 = tri.points[2].y;
     drawLine(x1,y1,x2,y2,color);
     drawLine(x2,y2,x3,y3,color);
     drawLine(x3,y3,x1,y1,color);
@@ -190,9 +196,17 @@ void fillFlatTop(int x1, int y1, int mx, int my, int x2, int y2, Color color) {
         }
     }
 }
-void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color) {
+void fillTriangle(triangle tri, Color color) {
     //find mx and my
     //bubble sort the coordinates in ascending y order
+
+    int x1 = tri.points[0].x;
+    int y1 = tri.points[0].y;
+    int x2 = tri.points[1].x;
+    int y2 = tri.points[1].y;
+    int x3 = tri.points[2].x;
+    int y3 = tri.points[2].y;
+
     bool swapped;
     do {
         swapped = false;
