@@ -28,6 +28,7 @@ void lineTest();
 void drawGrid();
 void drawTriangle(triangle tri, Color color);
 void fillTriangle(triangle tri, Color color);
+void textureTriangle(triangle tri);
 void drawRectangle(int xStart, int yStart, int width, int height, Color color);
 
 #endif

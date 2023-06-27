@@ -20,23 +20,23 @@ vec3 cubeVertices[cubeVerticesNum] = {
 
 face cubeFaces[cubeFaceNum] = {
     //front right back left top bottom
-    {1,2,4,RED},
-    {2,3,4,RED},
+    {1,2,4,RED,{0,0},{0,1},{1,0}},
+    {2,3,4,RED,{0,1},{1,1},{1,0}},
 
-    {4,3,8,BLUE},
-    {3,7,8,BLUE},
+    {4,3,8,BLUE,{0,0},{0,1},{1,0}},
+    {3,7,8,BLUE,{0,1},{1,1},{1,0}},
 
-    {8,7,5,GREEN},
-    {7,6,5,GREEN},
+    {8,7,5,GREEN,{0,0},{0,1},{1,0}},
+    {7,6,5,GREEN,{0,1},{1,1},{1,0}},
 
-    {5,6,1,YELLOW},
-    {6,2,1,YELLOW},
+    {5,6,1,YELLOW,{0,0},{0,1},{1,0}},
+    {6,2,1,YELLOW,{0,1},{1,1},{1,0}},
 
-    {2,6,3,PURPLE},
-    {6,7,3,PURPLE},
+    {2,6,3,PURPLE,{0,0},{0,1},{1,0}},
+    {6,7,3,PURPLE,{0,1},{1,1},{1,0}},
 
-    {5,1,8,BROWN},
-    {1,4,8,BROWN},
+    {5,1,8,BROWN,{0,0},{0,1},{1,0}},
+    {1,4,8,BROWN,{0,1},{1,1},{1,0}},
 };
 
 void loadCubeToMesh() {

@@ -236,6 +236,9 @@ void fillTriangle(triangle tri, Color color) {
     }
 }
 
+void textureTriangle(triangle tri) {
+
+}
 void drawRectangle(int xStart, int yStart, int width, int height, Color color) {
     //draw horizontal lines to create rect
     for (int y = yStart; y <= yStart+height; y++) {

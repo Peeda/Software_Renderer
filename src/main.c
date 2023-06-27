@@ -3,6 +3,7 @@
 #include "array.h"
 #include "matrix.h"
 #include "light.h"
+#include "texture.h"
 
 mat4 projectionMatrix;
 light worldLight;
@@ -50,10 +51,23 @@ void setup() {
     vec3Normalize(&lightDir);
     worldLight = (light){lightDir};
     projectionMatrix = mat4Projection(PI/3,aspectRatio,0.1,100);
+
+    uint32_t *intermediate = (uint32_t*)REDBRICK_TEXTURE;
+    for (int i = 0; i < 64*64; i++) {
+        uint32_t curr = intermediate[i];
+        int r,g,b,a;
+        int mask = 0xFF;
+        a = (curr >> 24) & mask;
+        r = (curr >> 16) & mask;
+        g = (curr >> 8) & mask;
+        b = curr & mask;
+        meshTexture[i] = (Color){r,g,b,a};
+    }
+
     // loadFileToMesh("./assets/f22.obj");
     // loadFileToMesh("./assets/cube.obj");
-    loadFileToMesh("./assets/drone.obj");
-    // loadCubeToMesh();
+    // loadFileToMesh("./assets/drone.obj");
+    loadCubeToMesh();
 }
 
 void process_input() {
@@ -174,9 +188,14 @@ void update() {
             projectedPoints[i].y += (float)WINDOW_HEIGHT/2;
         }
         triangle toPush;
+        vec2 uvCoordinates[3];
+        uvCoordinates[0] = (vec2){currFace.aTexture.x,currFace.aTexture.y};
+        uvCoordinates[1] = (vec2){currFace.bTexture.x,currFace.bTexture.y};
+        uvCoordinates[1] = (vec2){currFace.cTexture.x,currFace.cTexture.y};
         for (int i = 0; i < 3; i++) {
             toPush.points[i].x = projectedPoints[i].x;
             toPush.points[i].y = projectedPoints[i].y;
+            toPush.texturePoints[i] = uvCoordinates[i];
         }
         toPush.color = shadedColor;
         toPush.depth = avgDepth;
@@ -212,7 +231,10 @@ void render() {
                 drawTriangle(tri, BLACK);
             }
         } else if (renderMethod == TEXTURED || renderMethod == TEXTURED_WIREFRAME) {
-
+            textureTriangle(tri);
+            if (renderMethod == TEXTURED_WIREFRAME) {
+                drawTriangle(tri, BLACK);
+            }
         }
     }
     textureRender();
