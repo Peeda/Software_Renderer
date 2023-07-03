@@ -24,6 +24,9 @@ void vec2Normalize(vec2 *a) {
     float magnitude = vec2Magnitude(*a);
     vec2Divide(a, magnitude);
 }
+float vec2Cross(vec2 a, vec2 b) {
+    return (a.x*b.y - a.y*b.x);
+}
 
 float vec3Magnitude(vec3 a) {
     return sqrt(a.x*a.x + a.y*a.y + a.z*a.z);

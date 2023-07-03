@@ -29,6 +29,7 @@ vec2 vec2Subtract(vec2 a, vec2 b);
 void vec2Scale(vec2 *a, float factor);
 void vec2Divide(vec2 *a, float factor);
 void vec2Normalize(vec2 *a);
+float vec2Cross(vec2 a, vec2 b);
 
 float vec3Magnitude(vec3 a);
 vec3 vec3Add(vec3 a, vec3 b);

@@ -11,6 +11,7 @@ vec3 cameraPos = {0,0,0};
 
 bool useCulling;
 bool painters;
+bool frameByFrame;
 enum renderMethod {
     WIREFRAME,
     WIREFRAME_DOTS,
@@ -35,6 +36,7 @@ int main() {
         process_input();
         update();
         render();
+        if (frameByFrame) WaitTime(1);
     }
 
     destroyRendering();
@@ -44,6 +46,7 @@ int main() {
 void setup() {
     useCulling = true;
     painters = false;
+    frameByFrame = false;
     renderMethod = WIREFRAME;
 
     float aspectRatio = (float)WINDOW_WIDTH/WINDOW_HEIGHT;
@@ -63,6 +66,12 @@ void setup() {
         b = curr & mask;
         meshTexture[i] = (Color){r,g,b,a};
     }
+    for (int y = 0; y < 64; y++) {
+        for (int x = 0; x < 64; x++) {
+            int val = y ^ x;
+            // meshTexture[y*64 +x] = (Color){val,val,val,255};
+        }
+    }
 
     // loadFileToMesh("./assets/f22.obj");
     // loadFileToMesh("./assets/cube.obj");
@@ -76,6 +85,9 @@ void process_input() {
     }
     if (IsKeyPressed(KEY_P)) {
         painters = !painters;
+    }
+    if (IsKeyPressed(KEY_F)) {
+        frameByFrame = !frameByFrame;
     }
     if (IsKeyPressed(KEY_ONE)) {
         renderMethod = WIREFRAME;
@@ -191,7 +203,7 @@ void update() {
         vec2 uvCoordinates[3];
         uvCoordinates[0] = (vec2){currFace.aTexture.x,currFace.aTexture.y};
         uvCoordinates[1] = (vec2){currFace.bTexture.x,currFace.bTexture.y};
-        uvCoordinates[1] = (vec2){currFace.cTexture.x,currFace.cTexture.y};
+        uvCoordinates[2] = (vec2){currFace.cTexture.x,currFace.cTexture.y};
         for (int i = 0; i < 3; i++) {
             toPush.points[i].x = projectedPoints[i].x;
             toPush.points[i].y = projectedPoints[i].y;
@@ -231,7 +243,7 @@ void render() {
                 drawTriangle(tri, BLACK);
             }
         } else if (renderMethod == TEXTURED || renderMethod == TEXTURED_WIREFRAME) {
-            textureTriangle(tri);
+            textureTriangle(tri, meshTexture);
             if (renderMethod == TEXTURED_WIREFRAME) {
                 drawTriangle(tri, BLACK);
             }
